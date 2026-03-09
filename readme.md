@@ -24,8 +24,8 @@
 
 ## 라이선스
 
-Copyright 2026 기호교육
-All Rights Reseerved
+Copyright 2026 기호교육.
+All Rights Reseerved.
 
 ---
 
@@ -39,5 +39,6 @@ All Rights Reseerved
 
 - 구성요소 이름 변경
 - 화면 레이아웃 비율 변경
+
 
 
