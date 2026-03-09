@@ -58,7 +58,7 @@ body {
 }
 
 #mainContainer.horizontal #inputPanel {
-  flex: 0 0 30%;
+  flex: 0 0 35%;
 }
 
 #mainContainer.horizontal #tablePanel {
@@ -211,3 +211,4 @@ tbody tr:nth-child(even) {
   width: 42px;
   flex-direction: column;
 }
+
