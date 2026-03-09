@@ -57,8 +57,12 @@ body {
   flex-direction: column;
 }
 
-#mainContainer.horizontal .panel {
-  height: 50%;
+#mainContainer.horizontal #inputPanel {
+  flex: 0 0 30%;
+}
+
+#mainContainer.horizontal #tablePanel {
+  flex: 1;
 }
 
 
