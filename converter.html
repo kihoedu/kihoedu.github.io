@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>내신 등급 변환기 - 송화림컨설팅×박기호논술</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* 변환기 페이지 전용 추가 스타일 */
+    .back-home {
+      padding: 8px 14px;
+      border: 1px solid #007bff;
+      background: #fff;
+      color: #007bff;
+      cursor: pointer;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .back-home:hover {
+      background: #f0f7ff;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="back-home">← 홈으로</a>
+      <div>
+        <h1>송화림컨설팅×박기호논술</h1>
+        <p>내신 등급 변환기 1.01b</p>
+      </div>
+    </div>
+    <button id="layoutToggle">화면 전환</button>
+  </header>
+
+  <main id="mainContainer" class="horizontal">
+    <section class="panel" id="inputPanel">
+      <div class="modeSelector">
+        <label><input type="radio" name="mode" value="g1" checked /> 9등급 → 5등급</label>
+        <label><input type="radio" name="mode" value="g2" /> 5등급 → 9등급</label>
+      </div>
+
+      <div class="inputBlock">
+        <label id="inputLabel" for="gradeInput">9등급 입력 (1.00 ~ 9.00)</label>
+        <input type="number" id="gradeInput" step="0.01" placeholder="예: 2.35" />
+      </div>
+
+      <div class="resultBlock">
+        <div class="resultItem">
+          <div class="label">상</div>
+          <div id="resultUpper" class="value">-</div>
+        </div>
+        <div class="resultItem">
+          <div class="label">평균</div>
+          <div id="resultMean" class="value">-</div>
+        </div>
+        <div class="resultItem">
+          <div class="label">하</div>
+          <div id="resultLower" class="value">-</div>
+        </div>
+      </div>
+      <div id="statusMessage" class="status"></div>
+    </section>
+
+    <div class="panelDivider" id="panelDivider"></div>
+
+    <section class="panel" id="tablePanel">
+      <table id="gradeTable">
+        <thead>
+          <tr>
+            <th>등급구간</th>
+            <th id="tableInputLabel">9등급</th>
+            <th id="tableUpperLabel">5등급(상)</th>
+            <th id="tableMeanLabel">5등급(평균)</th>
+            <th id="tableLowerLabel">5등급(하)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="data/g1_9to5.js"></script>
+  <script src="data/g2_5to9.js"></script>
+  <script src="js/validate.js"></script>
+  <script src="js/interpolate.js"></script>
+  <script src="js/lookup.js"></script>
+  <script src="js/tableRender.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
