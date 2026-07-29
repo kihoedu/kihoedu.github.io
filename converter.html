@@ -3,71 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>내신 등급 변환기 - 송화림컨설팅×박기호논술</title>
+  <title>박기호 논술 내신 등급 변환기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* 변환기 페이지 전용 추가 스타일 */
+    :root {
+      --primary: #1a73e8;
+      --primary-soft: #e8f0fe;
+      --bg-color: #f4f7f9;
+      --border-color: rgba(0, 0, 0, 0.08); /* 🌟 헤더 분할선 색상 */
+    }
+
+    body { background: var(--bg-color); font-family: 'Noto Sans KR', sans-serif; margin: 0; overflow: hidden; }
+
+    /* 헤더 스타일 */
+    .header { background: #fff; padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+    .header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .desktop-header { display: block; max-width: 800px; width: 100%; }
+    .mobile-header { display: none; }
+
+    @media (max-width: 768px) {
+      .desktop-header { display: none; }
+      .mobile-header { display: block; width: 100%; }
+    }
+
+    /* 🌟 1. 돌아가기 버튼 아이콘화 */
     .back-home {
-      padding: 8px 14px;
-      border: 1px solid #007bff;
-      background: #fff;
-      color: #007bff;
-      cursor: pointer;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 14px;
-      margin-right: 10px;
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      background: var(--primary-soft); color: var(--primary);
+      text-decoration: none; border-radius: 10px;
+      font-size: 18px; transition: 0.3s;
     }
-    .back-home:hover {
-      background: #f0f7ff;
+    .back-home:hover { background: var(--primary); color: #fff; }
+
+    /* 🌟 2. 화면 전환 버튼 아이콘화 */
+    #layoutToggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      border: 1px solid #ddd; background: #fff;
+      border-radius: 10px; cursor: pointer;
+      font-size: 16px; color: #5f6368; transition: 0.3s;
     }
-    .header-left {
-      display: flex;
-      align-items: center;
+    #layoutToggle:hover { background: #f8f9fa; border-color: #ccc; }
+
+    /* 메인 레이아웃 */
+    #mainContainer { height: calc(100vh - 63px); display: flex; }
+    #inputPanel {
+      background: #fff; flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; padding: 25px;
+      overflow: visible;
     }
+
+    /* 스테퍼 UI */
+    .stepper-grid { display: grid; grid-template-columns: 1fr auto 1fr 1fr; gap: 10px; align-items: center; margin: 20px 0; }
+    .digit-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .s-btn { width: 45px; height: 35px; border-radius: 8px; border: 1px solid #eee; background: #f8f9fa; color: var(--primary); font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .s-btn:hover { background: var(--primary); color: #fff; }
+    .digit-display { font-size: 32px; font-weight: 900; color: var(--primary); width: 45px; text-align: center; }
+    .dot-display { font-size: 32px; font-weight: 900; padding-bottom: 5px; }
+
+    .modeSelector { display: inline-flex; background: #f1f3f4; padding: 5px; border-radius: 15px; margin-bottom: 20px; }
+    .modeSelector label { padding: 8px 18px; border-radius: 10px; cursor: pointer; font-size: 13px; }
+    .modeSelector input[type="radio"] { display: none; }
+    .modeSelector input[type="radio"]:checked + span { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 10px; padding: 8px 18px; display: inline-block; }
+
+    .resultBlock { display: flex; gap: 10px; width: 100%; max-width: 450px; margin-bottom: 15px; }
+    .resultItem { flex: 1; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 12px; text-align: center; }
+    .resultItem .label { font-size: 11px; color: #888; }
+    .resultItem .value { font-size: 18px; font-weight: 700; }
+
+    .cumulative-block { width: 100%; max-width: 450px; padding: 15px 30px; background: linear-gradient(135deg, #1a73e8 0%, #0052cc 100%); border-radius: 18px; text-align: center; color: #fff; box-shadow: 0 5px 15px rgba(26, 115, 232, 0.2); }
+    .cumulative-label { font-size: 12px; opacity: 0.8; }
+    .cumulative-value { font-size: 28px; font-weight: 900; }
+
+    /* 🌟 3. 중앙 분할선 디자인 (헤더 분할선과 동일한 선 형태) */
+    .panelDivider {
+      background: var(--border-color); /* 헤더 경계선과 동일한 색상 */
+      border: none; position: relative; z-index: 10;
+    }
+    #mainContainer.horizontal .panelDivider { height: 1px; width: 100%; cursor: default; }
+
+    /* 테이블 패널 */
+    #tablePanel { background: #fff; flex-grow: 1; overflow-y: auto; padding-top: 0; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; cursor: pointer; }
+    th {
+      background: #f8f9fa; padding: 12px 10px; font-size: 12px; color: #777;
+      border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 1px 0 #ddd;
+    }
+    td { padding: 10px; border-bottom: 1px solid #f1f3f4; text-align: center; font-size: 13px; }
+    tr.highlight { background: #fffde7 !important; font-weight: 700; }
+    tr:hover { background: #f0f7ff; }
+
+    #gradeInput { display: none; }
   </style>
 </head>
-
 <body>
 
   <header class="header">
     <div class="header-left">
-      <a href="index.html" class="back-home">← 홈으로</a>
-      <div>
-        <h1>송화림컨설팅×박기호논술</h1>
-        <p>내신 등급 변환기 1.01b</p>
+      <a href="index.html" class="back-home" title="돌아가기"><i class="fas fa-home"></i></a>
+      <div class="desktop-header">
+        <svg viewBox="0 0 1000 50" width="100%" height="auto">
+          <text x="0" y="50%" dominant-baseline="middle" font-family="'Noto Sans KR', sans-serif" font-weight="700">
+            <tspan font-size="24" fill="#202124">박기호 논술</tspan>
+            <tspan font-size="16" fill="#70757a" dx="15">내신 등급 변환기</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="mobile-header">
+        <svg viewBox="0 0 500 90" width="100%" height="auto">
+          <text x="0" y="35" font-size="32" font-weight="700" fill="#202124">박기호 논술</text>
+          <text x="0" y="75" font-size="24" font-weight="500" fill="#70757a">내신 등급 변환기</text>
+        </svg>
       </div>
     </div>
-    <button id="layoutToggle">화면 전환</button>
+    <button id="layoutToggle" title="화면 전환"><i class="fas fa-arrows-alt-v"></i></button>
   </header>
 
   <main id="mainContainer" class="horizontal">
     <section class="panel" id="inputPanel">
       <div class="modeSelector">
-        <label><input type="radio" name="mode" value="g1" checked /> 9등급 → 5등급</label>
-        <label><input type="radio" name="mode" value="g2" /> 5등급 → 9등급</label>
+        <label><input type="radio" name="mode" value="g1" checked /><span>9등급 → 5등급</span></label>
+        <label><input type="radio" name="mode" value="g2" /><span>5등급 → 9등급</span></label>
       </div>
 
-      <div class="inputBlock">
-        <label id="inputLabel" for="gradeInput">9등급 입력 (1.00 ~ 9.00)</label>
-        <input type="number" id="gradeInput" step="0.01" placeholder="예: 2.35" />
+      <p style="font-size: 13px; color: #666; margin-bottom: 5px;">등급 조절</p>
+
+      <div class="stepper-grid">
+        <div class="digit-col">
+          <button class="s-btn" onclick="adjustDigit(0, 1)">+</button>
+          <div class="digit-display" id="d1">1</div>
+          <button class="s-btn" onclick="adjustDigit(0, -1)">-</button>
+        </div>
+        <div class="dot-display">.</div>
+        <div class="digit-col">
+          <button class="s-btn" onclick="adjustDigit(1, 1)">+</button>
+          <div class="digit-display" id="d2">0</div>
+          <button class="s-btn" onclick="adjustDigit(1, -1)">-</button>
+        </div>
+        <div class="digit-col">
+          <button class="s-btn" onclick="adjustDigit(2, 1)">+</button>
+          <div class="digit-display" id="d3">0</div>
+          <button class="s-btn" onclick="adjustDigit(2, -1)">-</button>
+        </div>
       </div>
+
+      <input type="number" id="gradeInput" value="1.00" step="0.01">
 
       <div class="resultBlock">
-        <div class="resultItem">
-          <div class="label">상</div>
-          <div id="resultUpper" class="value">-</div>
-        </div>
-        <div class="resultItem">
-          <div class="label">평균</div>
-          <div id="resultMean" class="value">-</div>
-        </div>
-        <div class="resultItem">
-          <div class="label">하</div>
-          <div id="resultLower" class="value">-</div>
-        </div>
+        <div class="resultItem"><div class="label">상위</div><div id="resultUpper" class="value">-</div></div>
+        <div class="resultItem"><div class="label">평균</div><div id="resultMean" class="value">-</div></div>
+        <div class="resultItem"><div class="label">하위</div><div id="resultLower" class="value">-</div></div>
       </div>
-      <div id="statusMessage" class="status"></div>
+
+      <div class="cumulative-block">
+        <div class="cumulative-label">예상 누적 백분위</div>
+        <div id="resultPercent" class="cumulative-value">- %</div>
+      </div>
+      <div id="statusMessage" style="margin-top:10px; font-size:12px; color:#999; min-height: 18px;"></div>
     </section>
 
     <div class="panelDivider" id="panelDivider"></div>
@@ -76,11 +172,7 @@
       <table id="gradeTable">
         <thead>
           <tr>
-            <th>등급구간</th>
-            <th id="tableInputLabel">9등급</th>
-            <th id="tableUpperLabel">5등급(상)</th>
-            <th id="tableMeanLabel">5등급(평균)</th>
-            <th id="tableLowerLabel">5등급(하)</th>
+            <th>구간</th><th>입력</th><th>상위</th><th>평균</th><th>하위</th><th>누적비(%)</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -90,10 +182,39 @@
 
   <script src="data/g1_9to5.js"></script>
   <script src="data/g2_5to9.js"></script>
+  <script src="data/cumulative.js"></script>
   <script src="js/validate.js"></script>
   <script src="js/interpolate.js"></script>
   <script src="js/lookup.js"></script>
   <script src="js/tableRender.js"></script>
   <script src="js/app.js"></script>
+
+  <script>
+    function adjustDivider() {
+      const container = document.getElementById('mainContainer');
+      const inputPanel = document.getElementById('inputPanel');
+      if (container && inputPanel && container.classList.contains('horizontal')) {
+        inputPanel.style.flex = '0 0 auto';
+      } else if (inputPanel) {
+        inputPanel.style.flex = '0 0 45%';
+      }
+    }
+
+    window.addEventListener('load', adjustDivider);
+    window.addEventListener('resize', adjustDivider);
+
+    const layoutToggle = document.getElementById('layoutToggle');
+    if(layoutToggle) {
+        layoutToggle.addEventListener('click', () => {
+          setTimeout(adjustDivider, 50);
+        });
+    }
+
+    const statusMsg = document.getElementById('statusMessage');
+    if(statusMsg) {
+        const observer = new MutationObserver(adjustDivider);
+        observer.observe(statusMsg, { childList: true, characterData: true, subtree: true });
+    }
+  </script>
 </body>
 </html>
